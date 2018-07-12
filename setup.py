@@ -32,7 +32,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    description="a short description",
+    description="municipal legislation",
     install_requires=requirements,
     license="UNLICENSED",
     long_description=readme + '\n\n' + history,
