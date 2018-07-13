@@ -11,14 +11,4 @@ deploy:
   distributions: sdist bdist_wheel
   user: Joseph.Rawson
   password:
-    secure: !!binary |
-      UHZUYW9CU2hjWVpEQkV6M1ExU3I1eTJIbWxmWHZoeWZocE1yTm04MW5rdjhOeDBXWWYzeER4WUo3
-      bzBYT1NWQzlCcHEvdFl0NjVhSDBGWkl0L1RJa2orRlo3VTc5ZEw0ajNZTjExeFBZZERqbmY2N1RH
-      dCt5MURBK3FhNlE5SlVJamRWWldkQmUyeUE2SzNzNUZQRXZGSXMyVlNsT052OEh0QmMycW9DMDZz
-      PQ==
-    tags: true
-install: pip install -U tox-travis
-language: python
-python:
-- 3.5
-script: tox
+    secure: DFRe4Hdj8R5DoFLUJFjuPpl1eSHo/9og57+6CpdFOCG7FomH3it8+d/LgxvVTbVStHuQx6BmrwVS4gXUYLytLkumpZORL7bquNT/LC8nYcLGrhFCk/RVtn5DXD/++oDX0jbEvKceoO+iLh39S1hcSCvEz9ZVlZSaWHPHA3CRsZpt1gPMLYX/+xN0EML1jdc6MghncSLFn3IzADgWicEvsXbCWEUbY3Hyyx+FDKb2SDJuFbz5mq3UYqDcEN3k9laKrttzmHkujXClJ47Ay+lk5Uqt8DZA+GVS9jPauj/ep0ZcLZyQtkFfbPvxLaQN0X1uf5ybssTiU6wgFM8jvaF5A10ztSpezjy9yhUn+cBlPh8lB3BNca6Y/ZFSzubjw2522Kjv++nHSDcvuu1Q0G/TFhG3xwIvWknS83Z3IMvpnfOqwmFNM9nImQf887nvrjKsQSNscOWQ2UQkxawxWulJXmG7gzg5KSqjChFgdKHNFIfZRxflUz+T/IGb7Wh2dmQFamaQ5WekZm7OD010DJjDJO1cHy/LmFNSP5JG0493rKP94j3RBzyxTrNtKJTYVsCXXDjwJPDd306Nr9/LH4yAXYR4mTokqx7G/hioETGHVuYKPRyOku5tjy/xstOoUFd5ANOq4aOwtKWflqpVNhSqW75bJwhWxcomeUNYiLAQVHM=
