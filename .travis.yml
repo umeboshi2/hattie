@@ -11,8 +11,14 @@ deploy:
   distributions: sdist bdist_wheel
   user: Joseph.Rawson
   password:
-    secure: sWQInlVoov1x9cTtnFmgXaJiJb2MpKdgnfYEJi5msYvx1of2sJV5V2OZNFzdRZ4OTRxaUwSn04zveLzjjW5UFbrdgenNBYR2NXEPnDY0YU4dggVEk4W9fNcrvVOP5tdO1WpHDJL2BTyR28j4zxS6qmuuEZPxRtWRbitCh2p1GfpriBKu1yFHtvNvN9+q+19cMlBy3kayLeNakgFvU2nT5zobOkdtZ6xwi4NXFmYocHrTlJNMP8+saJMiDhazs5wYDu/+M/7wv412+PcKmExZ21au24L0smz9+A8WGIdpi64x35bBvrpqnc3XIv2WxeFsDLBCco7jlwvXg+9ouZfesABxja7bRX1Z/xCE/4Zg/bKNEpDha2bWEFQ8mx/8ilLoGI2GzRIzDolYq6ZkvXUkMBvp+IIDugLMMBcZevqnHKeOPm+SxbeEVETlekguRY9zA+5L7H9h/RrEV1SVHnRwA5q2iTeaUB/whhr9X2uc7sNKPPZ4trazx6dGorXa5WHO2+X3lmGOlS/dwNbiRsAyBdKN3aK7HSIFGGymyKDhmrBqIcZZihnTE1uJrlecDhNU5ytdsXGTCsBuVyBpKu5w4QeFt56u0IJHLb0e3LvYmgPvV1QyN40OXmXhasBqAsFH9a4bJgp9AfqQhM0EyW/FZGMtr2p1PNrn1HdC7L+wqAQ=
-  on:
+    secure: !!binary |
+      UHZUYW9CU2hjWVpEQkV6M1ExU3I1eTJIbWxmWHZoeWZocE1yTm04MW5rdjhOeDBXWWYzeER4WUo3
+      bzBYT1NWQzlCcHEvdFl0NjVhSDBGWkl0L1RJa2orRlo3VTc5ZEw0ajNZTjExeFBZZERqbmY2N1RH
+      dCt5MURBK3FhNlE5SlVJamRWWldkQmUyeUE2SzNzNUZQRXZGSXMyVlNsT052OEh0QmMycW9DMDZz
+      PQ==
     tags: true
-    repo: umeboshi2/hattie
-    python: 3.6
+install: pip install -U tox-travis
+language: python
+python:
+- 3.5
+script: tox
