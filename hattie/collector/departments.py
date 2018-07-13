@@ -1,6 +1,6 @@
 import re
 
-from hubby.util import legistar_id_guid
+from ..util import legistar_id_guid
 
 from .base import BaseCollector
 
@@ -25,10 +25,3 @@ class DeptCollector(BaseCollector):
         self.retrieve_page(self.url)
         self.depts = self._get_depts(self.soup)
         self.result = self.depts
-
-
-if __name__ == "__main__":
-
-    dc = DeptCollector()
-    dc.retrieve_page(url)
-    dc.collect()

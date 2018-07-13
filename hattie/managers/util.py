@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from hubby.database import AgendaItemTypeMap
+from ..database import AgendaItemTypeMap
 
 
 def convert_range_to_datetime(start, end):
@@ -8,7 +8,7 @@ def convert_range_to_datetime(start, end):
     start = datetime.fromtimestamp(float(start))
     end = datetime.fromtimestamp(float(end))
     return start, end
-    
+
 
 def convert_agenda_number(agenda_number):
     delimiter = '.-'
@@ -26,4 +26,3 @@ def convert_agenda_number(agenda_number):
         else:
             order = None
     return itemtype, order
-

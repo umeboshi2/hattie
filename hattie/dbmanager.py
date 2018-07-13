@@ -41,7 +41,7 @@ class DatabaseManager(object):
         import warnings
         warnings.warn("Please use .collector instead.", stacklevel=2)
         return self.collector
-    
+
     def add_collected_people(self, people):
         return self.manager.add_collected_people(people)
 
@@ -104,8 +104,6 @@ class DatabaseManager(object):
         for item in meeting['items']:
             self.add_collected_item(item)
         self.manager._merge_pickled_meeting_items(meeting_id, meeting['items'])
-        
-    
 
     def merge_nonfinal(self):
         filtered = or_(Meeting.minutes_status == None, # noqa
@@ -133,7 +131,7 @@ class DatabaseManager(object):
                 print("adding action %d to database." % action['id'])
                 self.manager.add_collected_action(item_id, action)
         self.session.commit()
-        
+
     def add_collected_item(self, item):
         item = self.convert_binary_item(item)
         if not check_dupe_item(self.session, item):
@@ -141,7 +139,7 @@ class DatabaseManager(object):
             self.manager._add_collected_legislation_item(item)
         self.add_collected_actions(item['id'], item['actions'])
         self.session.commit()
-        
+
     def add_meeting_item(self, parsed_item):
         item = self.collector.collect('item', link=parsed_item['item_page'])
         item = self.convert_binary_item(item)
@@ -165,4 +163,3 @@ class DatabaseManager(object):
 
     def delete_all(self):
         delete_all(self.session)
-        

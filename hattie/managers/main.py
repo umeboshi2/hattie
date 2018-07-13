@@ -2,11 +2,12 @@ from datetime import datetime
 
 import transaction
 
-from hubby.util import legistar_id_guid, make_true_date
-from hubby.util import convert_range_to_datetime
-from hubby.database import Meeting, Item, Attachment, MeetingItem
-from hubby.database import Action, ItemAction, ActionVote
-from hubby.managers.base import BaseManager
+from hattie.util import legistar_id_guid, make_true_date
+from hattie.util import convert_range_to_datetime
+from hattie.database import Meeting, Item, Attachment
+from hattie.database import Action, ItemAction, ActionVote
+from hattie.managers.base import BaseManager
+
 
 class ItemManager(BaseManager):
     def query(self):
@@ -36,11 +37,10 @@ class ItemManager(BaseManager):
         return self.session.merge(i)
 
 
-
 class ActionManager(BaseManager):
     def query(self):
         return self.session.query(Action)
-    
+
     def add(self, item_id, actiondata):
         with transaction.manager:
             a = Action()
@@ -81,35 +81,34 @@ class ActionManager(BaseManager):
                 avote = ActionVote(a.id, person_id, vote)
                 self.session.add(avote)
         return self.session.merge(a)
-    
-            
-    
+
+
 class MeetingManager(BaseManager):
     def query(self):
         return self.session.query(Meeting)
 
     def _add(self, mdata):
         pass
-    
+
     def add(self, mdata):
         pass
-    
+
     def _range_filter(self, query, start, end):
         query = query.filter(Meeting.date >= start)
         query = query.filter(Meeting.date <= end)
         return query
-    
+
     def get_meeting_list(self):
         query = self.session.query(Meeting).order_by(Meeting.date)
         return query.all()
-    
+
     def get_ranged_meetings(self, start, end, timestamps=False):
         if timestamps:
             start, end = convert_range_to_datetime(start, end)
         q = self.session.query(Meeting)
         q = self._range_filter(q, start, end)
         return q.all()
-    
+
     def _add_meeting_from_rss(self, entry):
         with transaction.manager:
             m = Meeting()
@@ -120,7 +119,6 @@ class MeetingManager(BaseManager):
             m.updated = datetime.now()
             self.session.add(m)
         return self.session.merge(m)
-
 
     def _add_collected_meeting(self, meeting, collected):
         with transaction.manager:
@@ -133,4 +131,3 @@ class MeetingManager(BaseManager):
             meeting.updated = datetime.now()
             m = self.session.merge(meeting)
         return m
-    

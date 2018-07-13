@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, backref
 
 from sqlalchemy.ext.declarative import declarative_base
 
-from hubby.legistar import legistar_host
+from .legistar import legistar_host
 
 Base = declarative_base()
 
@@ -212,11 +212,11 @@ class MeetingItem(Base, SerialBase):
         self.type = None
         self.order = None
         self.item_order = None
-        
+
     def __repr__(self):
         return "<MeetingItem %d:%d>" % (self.meeting_id, self.item_id)
-    
-    
+
+
 class Action(Base, SerialBase):
     __tablename__ = 'lgr_actions'
 
@@ -231,10 +231,10 @@ class Action(Base, SerialBase):
     minutes_note = Column(String)
     action = Column(String)
     action_text = Column(Unicode)
-    #item_id = Column(Integer, ForeignKey('items.id'))
-    
+    # item_id = Column(Integer, ForeignKey('items.id'))
+
     # related
-    
+
     def __init__(self):
         self.id = None
         self.guid = None
@@ -247,10 +247,10 @@ class Action(Base, SerialBase):
         self.minutes_note = None
         self.action = None
         self.action_text = None
-        
+
     def __repr__(self):
         return "<Action: %s, id: %d>" % (self.file_id, self.id)
-    
+
 
 class ItemAction(Base, SerialBase):
     __tablename__ = 'lgr_item_action'
@@ -259,16 +259,16 @@ class ItemAction(Base, SerialBase):
                      ForeignKey('lgr_items.id'),
                      primary_key=True)
     action_id = Column('action_id', Integer,
-                        ForeignKey('lgr_actions.id'),
-                        primary_key=True)
+                       ForeignKey('lgr_actions.id'),
+                       primary_key=True)
 
     def __init__(self, item_id, action_id):
         self.item_id = item_id
         self.action_id = action_id
-        
+
     def __repr__(self):
         return "<ItemAction %d:%d>" % (self.item_id, self.action_id)
-    
+
 
 class ActionVote(Base, SerialBase):
     __tablename__ = 'lgr_action_vote'
@@ -294,7 +294,6 @@ class ActionVote(Base, SerialBase):
                              ForeignKey('lgr_people.id'))
 
 
-
 class File(Base, SerialBase):
     __tablename__ = 'lgr_files'
 
@@ -309,11 +308,11 @@ class File(Base, SerialBase):
         self.http_info = None
         self.content = None
         self.link = None
-        
+
     def __repr__(self):
         return "<File:  id: %d>" % self.id
-    
-    
+
+
 class Agenda(Base, SerialBase):
     __tablename__ = 'lgr_agendas'
 
@@ -323,18 +322,18 @@ class Agenda(Base, SerialBase):
     http_info = Column(PickleType)
     content = Column(LargeBinary)
     link = Column(String)
-    
+
     def __init__(self):
         self.id = None
         self.guid = None
         self.http_info = None
         self.content = None
         self.link = None
-        
+
     def __repr__(self):
         return "<Agenda:  id: %d>" % self.id
-    
-    
+
+
 class Minutes(Base, SerialBase):
     __tablename__ = 'lgr_minutes'
 
@@ -344,18 +343,18 @@ class Minutes(Base, SerialBase):
     http_info = Column(PickleType)
     content = Column(LargeBinary)
     link = Column(String)
-    
+
     def __init__(self):
         self.id = None
         self.guid = None
         self.http_info = None
         self.content = None
         self.link = None
-        
+
     def __repr__(self):
         return "<Minutes:  id: %d>" % self.id
-    
-    
+
+
 class Attachment(Base, SerialBase):
     __tablename__ = 'lgr_attachments'
 
@@ -366,7 +365,7 @@ class Attachment(Base, SerialBase):
     content = Column(LargeBinary)
     link = Column(String)
     item_id = Column(Integer, ForeignKey('lgr_items.id'))
-    
+
     def __init__(self):
         self.id = None
         self.guid = None
@@ -375,13 +374,13 @@ class Attachment(Base, SerialBase):
         self.content = None
         self.link = None
         self.item_id = None
-        
+
     def __repr__(self):
         return "<Attachment:  id: %d>" % self.id
 
     def get_link(self):
         return 'https://%s/%s' % (legistar_host, self.link)
-    
+
 
 class Tag(Base, SerialBase):
     __tablename__ = 'lgr_tagnames'
@@ -393,7 +392,7 @@ class Tag(Base, SerialBase):
 
     def __repr__(self):
         return "<Tag: %s>" % self.name
-    
+
 
 class ItemTag(Base, SerialBase):
     __tablename__ = 'lgr_item_tags'
@@ -409,18 +408,19 @@ class ItemTag(Base, SerialBase):
 
     def __repr__(self):
         return "<ItemTag: %s:%s>" % (self.id, self.tag)
-    
+
+
 # ItemTag relationships
 Tag.items = relationship(Item, backref='tags',
-                             order_by=Item.id,
-                             secondary='lgr_item_tags')
+                         order_by=Item.id,
+                         secondary='lgr_item_tags')
 
-    
+
 #######################################################
 #######################################################
 
 Department.meetings = relationship(Meeting, order_by=Meeting.date)
-    
+
 # Meeting relationships
 meeting_backref = backref('meeting', uselist=False)
 
@@ -445,9 +445,9 @@ MeetingItem.item = relationship(Item)
 
 
 # Item relationships
-Item.actions =  relationship(Action, backref='items',
-                             order_by=Action.id,
-                             secondary='lgr_item_action')
+Item.actions = relationship(Action, backref='items',
+                            order_by=Action.id,
+                            secondary='lgr_item_action')
 
 Item.attachments = relationship(Attachment, backref='item',
                                 order_by=Attachment.id)

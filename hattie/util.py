@@ -2,11 +2,13 @@ import random
 import time
 import datetime
 import urllib.parse
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 import http.client
-from http.client import IncompleteRead
+import http.client.IncompleteRead
 
-from hubby.legistar import legistar_host
+from .legistar import legistar_host
 
 
 class FileExistsError(Exception):
@@ -20,6 +22,7 @@ class BadDownloadError(Exception):
 class InvalidDateFormat(Exception):
     pass
 
+
 # Tidy function inspired by:
 # http://www.toao.net/48-replacing-smart-quotes-and-em-dashes-in-mysql
 def tidy_needless_utf_punctuation(data):
@@ -32,12 +35,13 @@ def tidy_needless_utf_punctuation(data):
     data = data.replace('\xe2\x80\xa6', "...")
     return data
 
+
 def convert_range_to_datetime(start, end):
     "start and end are timestamps"
     start = datetime.datetime.fromtimestamp(float(start))
     end = datetime.datetime.fromtimestamp(float(end))
     return start, end
-    
+
 
 def random_wait(minimum=5, maximum=15, msg=''):
     # seconds = random.randint(minimum, maximum)
@@ -147,6 +151,7 @@ def handle_link(uri):
             data['length'] = length
     return data
 
+
 # http://stackoverflow.com/a/14206036/1869821
 # http://bobrochel.blogspot.co.nz/2010/11/bad-servers-chunked-encoding-and.html
 def patch_http_response_read(func):
@@ -156,12 +161,11 @@ def patch_http_response_read(func):
         except http.client.IncompleteRead as e:
             return e.partial
     return inner
-http.client.HTTPResponse.read = patch_http_response_read(http.client.HTTPResponse.read)
+
+
+http.client.HTTPResponse.read = patch_http_response_read(http.client.HTTPResponse.read) # noqa
+
 
 def get_rss_feed(url):
     response = urllib.request.urlopen(url)
     return response.read(), response.info()
-
-
-if __name__ == "__main__":
-    import os

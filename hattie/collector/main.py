@@ -2,9 +2,7 @@ import os
 import pickle as Pickle
 from datetime import datetime
 
-from hubby.util import legistar_id_guid
-
-from .base import BaseCollector
+from ..util import legistar_id_guid
 
 from .people import PeopleCollector
 from .departments import DeptCollector
@@ -65,7 +63,7 @@ class PickleCollector(object):
         return dbname
 
     def make_cache_object(self, type, link=None):
-        from hubby.database import MainCache
+        from ..database import MainCache
         id = None
         if type in ['meeting', 'item', 'action']:
             id, guid = legistar_id_guid(link)
@@ -82,8 +80,7 @@ class PickleCollector(object):
         else:
             raise RuntimeError("No file present %s" % filename)
         return mc
-    
-        
+
     def collect(self, type, link=None):
         id = None
         if type in ['meeting', 'item', 'action']:
@@ -101,7 +98,7 @@ class PickleCollector(object):
             collector.collect()
             data = dict(result=collector.result, content=collector.content)
             Pickle.dump(data, open(filename, 'wb'))
-        try:    
+        try:
             data = Pickle.load(open(filename, 'rb'))
         except UnicodeDecodeError:
             data = Pickle.load(open(filename, 'rb'), encoding='bytes')
@@ -128,12 +125,3 @@ class MainCollector(_MainCollector):
 
     def collect(self, ctype):
         self._map[ctype].collect(self)
-
-
-if __name__ == "__main__":
-    murl = 'https://hattiesburg.legistar.com/MeetingDetail.aspx?From=RSS&ID=209045&GUID=6F113835-7E47-432D-B3BA-2140AC586A6C'
-    iurl = 'https://hattiesburg.legistar.com/LegislationDetail.aspx?ID=1221728&GUID=9CC815CB-387A-42BF-B442-B80F953CB51E&Options=&Search='
-    iurl2 = 'https://hattiesburg.legistar.com/LegislationDetail.aspx?ID=1195041&GUID=8DB3A9EB-569C-477C-9F3B-B04EFD8AA955&Options=&Search='
-    aurl = 'https://hattiesburg.legistar.com/HistoryDetail.aspx?ID=6153632&GUID=1376DD13-58E1-443A-9A2E-F218CE70C4B6'
-    mc = MainCollector()
-    mc.set_url(murl)

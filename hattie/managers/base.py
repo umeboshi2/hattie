@@ -13,10 +13,9 @@ class BaseManager(object):
 
     def query(self):
         raise NotImplementedError("Override me")
-    
+
     def get(self, id):
         return self.query().get(id)
 
     def all(self):
         return self.query().all()
-

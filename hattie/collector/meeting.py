@@ -1,7 +1,7 @@
 import re
 
-from hubby.util import onclick_link
-from hubby.util import legistar_id_guid
+# from ..util import onclick_link
+from ..util import legistar_id_guid
 
 from .base import BaseCollector
 
@@ -106,10 +106,3 @@ class MeetingCollector(BaseCollector):
         self.retrieve_page(url=self.url)
         self.meeting = self.get_meeting(self.soup)
         self.result = self.meeting
-
-
-if __name__ == "__main__":
-    url = 'https://hattiesburg.legistar.com/MeetingDetail.aspx?From=RSS&ID=209045&GUID=6F113835-7E47-432D-B3BA-2140AC586A6C'
-    mc = MeetingCollector()
-    mc.set_url(url)
-    mc.collect()

@@ -1,7 +1,8 @@
 import transaction
 
-from hubby.database import Department, Person
-from hubby.managers.base import BaseManager
+from ..database import Department, Person
+from .base import BaseManager
+
 
 class DepartmentManager(BaseManager):
     def query(self):
@@ -14,8 +15,6 @@ class DepartmentManager(BaseManager):
             self.session.add(dept)
         return self.session.merge(dept)
 
-    
-        
 
 class PersonManager(BaseManager):
     def query(self):
@@ -27,7 +26,7 @@ class PersonManager(BaseManager):
             setattr(p, key, value)
         self.session.add(p)
         return p
-    
+
     def add(self, data):
         with transaction.manager:
             p = self._notrans_add(data)
@@ -40,9 +39,3 @@ class PersonManager(BaseManager):
                 p = self._notrans_add(pinfo)
                 plist.append(p)
         return [self.session.merge(p) for p in plist]
-
-                
-                
-
-    
-        

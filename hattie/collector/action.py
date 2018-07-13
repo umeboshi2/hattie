@@ -1,24 +1,22 @@
 import re
 
-from hubby.util import legistar_id_guid
+from ..util import legistar_id_guid
 
 from .base import BaseCollector
 
 ACTION_DATA_IDENTIFIERS = dict(file_id='_hypFile',
-                        ftype='_lblType',
-                        mover='_hypMover',
-                        seconder='_hypSeconder',
-                        result='_lblResult',
-                        agenda_note='_lblAgendaNote',
-                        minutes_note='_lblMinutesNote',
-                        action='_lblAction',
-                        action_text='_lblActionText'
-                        )
+                               ftype='_lblType',
+                               mover='_hypMover',
+                               seconder='_hypSeconder',
+                               result='_lblResult',
+                               agenda_note='_lblAgendaNote',
+                               minutes_note='_lblMinutesNote',
+                               action='_lblAction',
+                               action_text='_lblActionText')
 
 
 class ActionCollector(BaseCollector):
     def _get_votes(self, page):
-        #print "getting votes for", self.url
         tables = page.find_all('table', class_='rgMasterTable')
         if len(tables) != 1:
             msg = "Problem with determining master table len(tables) = %d"
@@ -34,7 +32,7 @@ class ActionCollector(BaseCollector):
             vote = vote.text.strip()
             items.append((name, link, vote))
         return items
-            
+
     def _get_action(self, page):
         markers = ACTION_DATA_IDENTIFIERS
         item_keys = list(markers.keys())
@@ -74,11 +72,3 @@ class ActionCollector(BaseCollector):
         self.action = self._get_action(self.soup)
         self.action['id'], self.action['guid'] = legistar_id_guid(self.url)
         self.result = self.action
-        
-                
-if __name__ == "__main__":
-    url = 'https://hattiesburg.legistar.com/HistoryDetail.aspx?ID=6153632&GUID=1376DD13-58E1-443A-9A2E-F218CE70C4B6'
-    url = 'https://hattiesburg.legistar.com/HistoryDetail.aspx?ID=5821489&GUID=3BF5DB0B-A3A7-4F90-BC9A-8670088BECA7'
-    ac = ActionCollector()
-    ac.retrieve_page(url)
-    i = ac._get_action(ac.soup)

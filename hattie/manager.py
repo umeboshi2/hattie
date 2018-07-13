@@ -2,26 +2,27 @@ from datetime import datetime
 import transaction
 
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy import desc
+# from sqlalchemy import desc
 
-from hubby.legistar import legistar_host
-from hubby.util import legistar_id_guid
-from hubby.util import make_true_date
-from hubby.util import convert_range_to_datetime
+# from .legistar import legistar_host
+from .util import legistar_id_guid
+from .util import make_true_date
+from .util import convert_range_to_datetime
 
-from hubby.database import Department, Person
-from hubby.database import Meeting, Item, MeetingItem
-from hubby.database import ItemAction, Action, ActionVote
-from hubby.database import Attachment
-from hubby.database import AgendaItemTypeMap
+from .database import Department, Person
+from .database import Meeting, Item, MeetingItem
+from .database import ItemAction, Action, ActionVote
+from .database import Attachment
+from .database import AgendaItemTypeMap
 
-from hubby.collector import MainCollector
-from hubby.collector.rss import RssCollector
+from .collector.main import MainCollector
+from .collector.rss import RssCollector
 
 timeformat = '%I:%M %p'
 
 drop_models = [Attachment, ActionVote, Action, ItemAction,
                MeetingItem, Item, Meeting, Department, Person]
+
 
 def delete_all(session):
     transaction.begin()
@@ -167,12 +168,9 @@ class ModelManager(object):
         self.session.flush()
         transaction.commit()
 
-        
-
     def _merge_collected_meeting_items(self, meeting, collected):
         meeting_id = meeting.id
         return self._merge_pickled_meeting_items(meeting_id, collected)
-
 
     def _merge_pickled_meeting_items(self, meeting_id, collected):
         transaction.begin()
@@ -190,16 +188,16 @@ class ModelManager(object):
                 dbitem = MeetingItem(meeting_id, item_id)
             agenda_num = item['agenda_num']
             ##########################################
-            ## Work around       #####################
-            ## irregular entries #####################
+            # # Work around       ####################
+            # # irregular entries ####################
             ##########################################
             if agenda_num == '2011-0229':
                 agenda_num = None
             if agenda_num == '1.':
                 agenda_num = '1'
             ##########################################
-            ##                    ####################
-            ##                    ####################
+            #                     ####################
+            #                     ####################
             ##########################################
             # first agenda item is missing from meeting details
             if meeting_id == 302621:
