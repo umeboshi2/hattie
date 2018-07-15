@@ -6,7 +6,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import http.client
-import http.client.IncompleteRead
+from http.client import .IncompleteRead
 
 from .legistar import legistar_host
 
@@ -158,7 +158,7 @@ def patch_http_response_read(func):
     def inner(*args):
         try:
             return func(*args)
-        except http.client.IncompleteRead as e:
+        except IncompleteRead as e:
             return e.partial
     return inner
 
