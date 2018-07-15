@@ -7,6 +7,7 @@ python:
 install: pip install -U tox-travis
 script: tox
 deploy:
+  all_branches: true
   tags: true
   provider: pypi
   distributions: sdist bdist_wheel
