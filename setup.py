@@ -11,7 +11,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = []
 
 setup_requirements = ['pytest-runner', ]
 
@@ -39,7 +39,7 @@ setup(
     include_package_data=True,
     keywords='hattie',
     name='hattie',
-    packages=find_packages(include=['hattie']),
+    packages=find_packages(include=['hattie', 'hattie.*]),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
