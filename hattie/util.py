@@ -6,7 +6,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import http.client
-from http.client import .IncompleteRead
+from http.client import IncompleteRead
 
 from .legistar import legistar_host
 
