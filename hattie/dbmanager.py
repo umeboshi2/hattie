@@ -85,9 +85,9 @@ class DatabaseManager(object):
         self.parsed = self.collector.collect('meeting', link=self.meeting.link)
 
     def add_meetings(self):
-        "This adds full meetings which have been added to meetings table by rss." # noqa
-        meetings = self.session.query(Meeting).all()
-        for meeting in meetings:
+        """This adds full meetings which have been added to
+        meetings table by rss."""
+        for meeting in self.session.query(Meeting):
             self.set_meeting(meeting)
             self.add_meeting(meeting)
         self.session.commit()
