@@ -1,6 +1,7 @@
 import os
 import pickle as Pickle
 from datetime import datetime
+import zipfile
 
 from ..util import legistar_id_guid
 
@@ -125,3 +126,18 @@ class MainCollector(_MainCollector):
 
     def collect(self, ctype):
         self._map[ctype].collect(self)
+
+
+class ZipCollector(PickleCollector):
+    def __init__(self,fileobj):
+        super(ZipCollector, self).__init__()
+        self.zfile = zipfile.ZipFile(fileobj)
+
+    def collect(self, type, link=None):
+        id = None
+        if type in ['meeting', 'item', 'action']:
+            id, guid = legistar_id_guid(link)
+        filename = self._filename(type, id)
+        data = Pickle.loads(self.zfile.read(filename))
+        return data['result']
+
