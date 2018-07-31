@@ -141,3 +141,8 @@ class ZipCollector(PickleCollector):
         data = Pickle.loads(self.zfile.read(filename))
         return data['result']
 
+    def get_rss_content(self, year):
+        filename = "data/rss-{}.rss".format(year)
+        content = self.zfile.read(filename)
+        return content
+

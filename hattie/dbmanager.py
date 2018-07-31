@@ -1,5 +1,6 @@
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
+import feedparser
 
 from .database import Meeting, Item, Action
 from .database import Person, Department
@@ -88,6 +89,7 @@ class DatabaseManager(object):
         """This adds full meetings which have been added to
         meetings table by rss."""
         for meeting in self.session.query(Meeting):
+            print("Adding meeting:", meeting)
             self.set_meeting(meeting)
             self.add_meeting(meeting)
         self.session.commit()
@@ -163,3 +165,9 @@ class DatabaseManager(object):
 
     def delete_all(self):
         delete_all(self.session)
+
+    def add_meetings_for_year(self, year):
+        content = self.collector.get_rss_content(year)
+        rss = feedparser.parse(content)
+        self.add_rss_meetings('ignore', rss=rss)
+        
