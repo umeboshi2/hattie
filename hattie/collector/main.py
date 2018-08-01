@@ -129,7 +129,7 @@ class MainCollector(_MainCollector):
 
 
 class ZipCollector(PickleCollector):
-    def __init__(self,fileobj):
+    def __init__(self, fileobj):
         super(ZipCollector, self).__init__()
         self.zfile = zipfile.ZipFile(fileobj)
 
@@ -145,4 +145,3 @@ class ZipCollector(PickleCollector):
         filename = "data/rss-{}.rss".format(year)
         content = self.zfile.read(filename)
         return content
-

@@ -161,4 +161,3 @@ class DatabaseManager(object):
         content = self.collector.get_rss_content(year)
         rss = feedparser.parse(content)
         self.add_rss_meetings('ignore', rss=rss)
-        
