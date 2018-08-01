@@ -52,7 +52,6 @@ class DatabaseManager(object):
             print("adding people........")
             people = self.collector.collect('people')
             self.add_collected_people(people)
-            self.session.commit()
 
     def add_collected_depts(self, depts):
         return self.manager.add_collected_depts(depts)
@@ -63,7 +62,6 @@ class DatabaseManager(object):
             print("adding departments.....")
             depts = self.collector.collect('depts')
             self.add_collected_depts(depts)
-            self.session.commit()
 
     def add_rss_meetings(self, url, rss=None):
         if rss is None:
@@ -75,9 +73,8 @@ class DatabaseManager(object):
                 print("adding meeting {} from rss".format(id))
                 try:
                     self.manager.add_meeting_from_rss(entry)
-                    self.session.commit()
                 except IntegrityError:
-                    self.session.rollback()
+                    pass
             else:
                 print("Meeting {} already present.".format(id))
 
@@ -92,14 +89,12 @@ class DatabaseManager(object):
             print("Adding meeting:", meeting)
             self.set_meeting(meeting)
             self.add_meeting(meeting)
-        self.session.commit()
 
     def add_meeting(self, meeting):
         for item in self.parsed['items']:
             self.add_meeting_item(item)
         self.manager._merge_collected_meeting_items(meeting, self.parsed)
         self.manager._merge_collected_meeting(meeting, self.parsed)
-        self.session.commit()
 
     def add_pickled_meeting(self, meeting):
         meeting_id = meeting['info']['id']
@@ -116,7 +111,6 @@ class DatabaseManager(object):
             collected = self.collector.collect('meeting', link=meeting.link)
             self.manager._merge_collected_meeting(meeting, collected)
             print("Merging meeting %d" % meeting.id)
-            self.session.commit()
 
     def convert_binary_item(self, item):
         if b'id' in item:
@@ -132,7 +126,6 @@ class DatabaseManager(object):
             if dbaction is None:
                 print("adding action %d to database." % action['id'])
                 self.manager.add_collected_action(item_id, action)
-        self.session.commit()
 
     def add_collected_item(self, item):
         item = self.convert_binary_item(item)
@@ -140,7 +133,6 @@ class DatabaseManager(object):
             print("adding item %d to database." % item['id'])
             self.manager._add_collected_legislation_item(item)
         self.add_collected_actions(item['id'], item['actions'])
-        self.session.commit()
 
     def add_meeting_item(self, parsed_item):
         item = self.collector.collect('item', link=parsed_item['item_page'])
@@ -161,7 +153,6 @@ class DatabaseManager(object):
             if dbaction is None:
                 print("adding action %d to database." % action['id'])
                 self.manager.add_collected_action(item_id, action)
-        self.session.commit()
 
     def delete_all(self):
         delete_all(self.session)
