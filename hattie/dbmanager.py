@@ -90,6 +90,23 @@ class DatabaseManager(object):
             self.set_meeting(meeting)
             self.add_meeting(meeting)
 
+    def add_zipped_meetings(self):
+        """This adds full meetings which have been added to
+        meetings table by rss."""
+        rssfiles = [f for f in self.collector.zfile.namelist()
+                    if f.endswith('.rss')]
+        if len(rssfiles) != 1:
+            # FIXME return a better error
+            raise RuntimeError("bad rssfiles {}".format(rssfiles))
+        rssname = rssfiles[0]
+        rss_content = self.collector.zfile.read(rssname)
+        parsed = feedparser.parse(rss_content)
+        for entry in parsed.entries:
+            self.set_meeting(entry)
+            meeting_id = self.parsed['info']['id']
+            meeting = self.session.query(Meeting).get(meeting_id)
+            self.add_meeting(meeting)
+
     def add_meeting(self, meeting):
         for item in self.parsed['items']:
             self.add_meeting_item(item)
