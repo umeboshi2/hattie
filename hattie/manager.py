@@ -20,7 +20,7 @@ from .collector.rss import RssCollector
 
 timeformat = '%I:%M %p'
 
-drop_models = [Attachment, ActionVote, Action, ItemAction,
+drop_models = [Attachment, ActionVote, ItemAction, Action,
                MeetingItem, Item, Meeting, Department, Person]
 
 
