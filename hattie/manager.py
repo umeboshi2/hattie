@@ -25,14 +25,14 @@ drop_models = [Attachment, ActionVote, ItemAction, Action,
 
 
 def delete_all(session):
-    transaction.begin()
-    for model in drop_models:
-        q = session.query(model)
-        q.delete()
-    transaction.commit()
+    with transaction.manager:
+        for model in drop_models:
+            q = session.query(model)
+            q.delete()
 
 
 def convert_agenda_number(agenda_number):
+    original = agenda_number
     while agenda_number.startswith('.'):
         agenda_number = agenda_number[1:]
     delimiter = '.-'
@@ -43,7 +43,8 @@ def convert_agenda_number(agenda_number):
         itemtype, order = agenda_number.split(delimiter)
         if itemtype.startswith('+'):
             itemtype = itemtype[1:]
-        itemtype = AgendaItemTypeMap[itemtype]
+        if itemtype in AgendaItemTypeMap:
+            itemtype = AgendaItemTypeMap[itemtype]
         order = order.strip()
         while order.endswith('.'):
             order = order[:-1]
@@ -170,7 +171,53 @@ class ModelManager(object):
 
     def _merge_collected_meeting_items(self, meeting, collected):
         meeting_id = meeting.id
-        return self._merge_pickled_meeting_items(meeting_id, collected)
+        mtmap = {619637: '_merge_2018_08_7'}
+        if meeting_id in mtmap:
+            return getattr(self, mtmap[meeting_id])(meeting_id, collected)
+        else:
+            return self._merge_pickled_meeting_items(meeting_id, collected)
+
+    def _merge_2018_08_7(self, meeting_id, collected):
+        transaction.begin()
+        items = collected['items']
+        item_count = 0
+        for item in items:
+            item_count += 1
+            item_id, guid = legistar_id_guid(item['item_page'])
+            query = self.session.query(MeetingItem)
+            query = query.filter_by(meeting_id=meeting_id)
+            query = query.filter_by(item_id=item_id)
+            try:
+                dbitem = query.one()
+            except NoResultFound:
+                dbitem = MeetingItem(meeting_id, item_id)
+            agenda_num = item['agenda_num']
+            ##########################################
+            # # Work around       ####################
+            # # irregular entries ####################
+            ##########################################
+            ##########################################
+            if agenda_num == 'IV.':
+                dbitem.agenda_num = agenda_num
+                type, order = 'unknown', 1
+            elif agenda_num == 'VI.':
+                type = AgendaItemTypeMap['VI']
+                order = 1
+            elif agenda_num is not None:
+                dbitem.agenda_num = agenda_num
+                type, order = agenda_num.split('.-')
+                if type == 'IV':
+                    type = 'unknown'
+                elif type in AgendaItemTypeMap:
+                    type = AgendaItemTypeMap[type]
+                else:
+                    raise RuntimeError("Can't parse {}".format(agenda_num))
+            dbitem.type, dbitem.order = type, order
+            dbitem.item_order = item_count
+            dbitem.version = int(item['version'])
+            self.session.merge(dbitem)
+            self.session.flush()
+        transaction.commit()
 
     def _merge_pickled_meeting_items(self, meeting_id, collected):
         transaction.begin()
