@@ -91,9 +91,11 @@ class PickleCollector(object):
             print("Retrieving %s from legistar..." % filename)
             collector = self._collector(type)
             if link is not None:
-                print('link is', link, type)
                 if not link.startswith('http'):
                     link = collector.url_prefix + link
+                else:
+                    if type != 'meeting':
+                        raise RuntimeError("BAD LINK", link)
                 print("Retrieving", link)
                 collector.set_url(link)
             collector.collect()

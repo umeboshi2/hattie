@@ -86,7 +86,6 @@ class DatabaseManager(object):
         """This adds full meetings which have been added to
         meetings table by rss."""
         for meeting in self.session.query(Meeting):
-            print("Adding meeting:", meeting)
             self.set_meeting(meeting)
             self.add_meeting(meeting)
 
@@ -108,6 +107,7 @@ class DatabaseManager(object):
             self.add_meeting(meeting)
 
     def add_meeting(self, meeting):
+        print("Merging meeting {}".format(meeting.title))
         for item in self.parsed['items']:
             self.add_meeting_item(item)
         self.manager._merge_collected_meeting_items(meeting, self.parsed)
