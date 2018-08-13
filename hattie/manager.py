@@ -344,27 +344,28 @@ class ModelManager(object):
             dbaction.file_id = file_id
         else:
             dbaction.action = 'Roll Call'
-        self.session.add(dbaction)
-        # flush here so the action can be referred by
-        # foreign keys in 'item_action' and 'action_vote'
-        self.session.flush()
-        # make item_action object
-        item_action = ItemAction(item_id, dbaction.id)
-        self.session.add(item_action)
-        # handle votes
-        ward_num = 1
-        vote_attributes = dict(action_id=dbaction.id)
-        for name, link, vote in action['votes']:
-            person_id, ignore = legistar_id_guid(link)
-            id_key = 'ward{}_person_id'.format(ward_num)
-            vote_attributes[id_key] = person_id
-            vote_attributes['ward{}'.format(ward_num)] = vote
-            ward_num += 1
+        with transaction.manager:
+            self.session.add(dbaction)
+            # flush here so the action can be referred by
+            # foreign keys in 'item_action' and 'action_vote'
+            self.session.flush()
+            # make item_action object
+            item_action = ItemAction(item_id, dbaction.id)
+            self.session.add(item_action)
+            # handle votes
+            ward_num = 1
+            vote_attributes = dict(action_id=dbaction.id)
+            for name, link, vote in action['votes']:
+                person_id, ignore = legistar_id_guid(link)
+                id_key = 'ward{}_person_id'.format(ward_num)
+                vote_attributes[id_key] = person_id
+                vote_attributes['ward{}'.format(ward_num)] = vote
+                ward_num += 1
 
-        avote = ActionVote()
-        for attribute, value in vote_attributes.items():
-            setattr(avote, attribute, value)
-        self.session.add(avote)
+            avote = ActionVote()
+            for attribute, value in vote_attributes.items():
+                setattr(avote, attribute, value)
+                self.session.add(avote)
 
     # add the item before the actions
     def _add_collected_legislation_item(self, item):
