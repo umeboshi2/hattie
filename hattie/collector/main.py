@@ -140,10 +140,14 @@ class ZipCollector(PickleCollector):
         if type in ['meeting', 'item', 'action']:
             id, guid = legistar_id_guid(link)
         filename = self._filename(type, id)
-        data = Pickle.loads(self.zfile.read(filename))
-        return data['result']
+        data = Pickle.load(self.zfile.open(filename))
+        r = data['result']
+        del data
+        return r
+
+    def get_content(self, filename):
+        return self.zfile.read(filename)
 
     def get_rss_content(self, year):
         filename = "data/rss-{}.rss".format(year)
-        content = self.zfile.read(filename)
-        return content
+        return self.get_content(filename)
