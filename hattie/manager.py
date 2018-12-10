@@ -1,5 +1,10 @@
 from datetime import datetime
 import transaction
+import io
+import tarfile
+import lzma
+import json
+import base64
 
 from sqlalchemy.orm.exc import NoResultFound
 # from sqlalchemy import desc
@@ -29,6 +34,24 @@ def delete_all(session):
         for model in drop_models:
             q = session.query(model)
             q.delete()
+
+
+def export_all(session):
+    data = dict()
+    output = io.BytesIO()
+    with transaction.manager:
+        with lzma.LZMAFile(output, 'w') as zfile:
+            for model in drop_models:
+                q = session.query(model)
+                name = model.__name__
+                print("Dumping {}".format(name))
+                mlist = [m.serialize() for m in q]
+                data[name] = mlist
+                print("Exported {}".format(name))
+            content = json.dumps(data).encode()
+            zfile.write(content)
+    del data
+    return output.getvalue()
 
 
 def convert_agenda_number(agenda_number):

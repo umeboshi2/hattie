@@ -1,11 +1,14 @@
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import extract
+
 import feedparser
 
 from .database import Meeting, Item, Action
 from .database import Person, Department
 
-from .manager import ModelManager, delete_all
+from .manager import ModelManager, delete_all, export_all
+
 
 from .util import legistar_id_guid
 
@@ -82,10 +85,14 @@ class DatabaseManager(object):
         self.meeting = meeting
         self.parsed = self.collector.collect('meeting', link=self.meeting.link)
 
-    def add_meetings(self):
+    def add_meetings(self, year=None):
         """This adds full meetings which have been added to
         meetings table by rss."""
-        for meeting in self.session.query(Meeting):
+        query = self.session.query(Meeting)
+        if year is not None:
+            # https://stackoverflow.com/a/1453610/1869821
+            query = query.filter(extract('year', Meeting.date) == year)
+        for meeting in query:
             self.set_meeting(meeting)
             self.add_meeting(meeting)
 
@@ -98,13 +105,14 @@ class DatabaseManager(object):
             # FIXME return a better error
             raise RuntimeError("bad rssfiles {}".format(rssfiles))
         rssname = rssfiles[0]
-        rss_content = self.collector.zfile.read(rssname)
+        rss_content = self.collector.get_content(rssname)
         parsed = feedparser.parse(rss_content)
         for entry in parsed.entries:
             self.set_meeting(entry)
             meeting_id = self.parsed['info']['id']
             meeting = self.session.query(Meeting).get(meeting_id)
             self.add_meeting(meeting)
+            del self.parsed
 
     def add_meeting(self, meeting):
         print("Merging meeting {}".format(meeting.title))
@@ -174,6 +182,9 @@ class DatabaseManager(object):
     def delete_all(self):
         delete_all(self.session)
 
+    def export_all(self):
+        return export_all(self.session)
+    
     def add_meetings_for_year(self, year):
         content = self.collector.get_rss_content(year)
         rss = feedparser.parse(content)
