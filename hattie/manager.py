@@ -76,7 +76,7 @@ def convert_agenda_number(agenda_number):
         itemtype = 'unknown'
         while agenda_number.endswith('.'):
             agenda_number = agenda_number[:-1]
-        if agenda_number:
+        if agenda_number and agenda_number.isnumeric():
             order = int(agenda_number)
         else:
             order = None

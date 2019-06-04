@@ -25,7 +25,7 @@ Base = declarative_base()
 FileType = Enum('agenda', 'minutes', 'attachment',
                 name='lgr_file_type_enum')
 
-AgendaItemType = Enum('presentation', 'policy', 'routine', 'unknown',
+AgendaItemType = Enum('public', 'presentation', 'policy', 'routine', 'unknown',
                       name='agenda_item_type_enum')
 
 VoteType = Enum('Yea', 'Nay', 'Abstain', 'Absent', 'Present',
@@ -33,7 +33,8 @@ VoteType = Enum('Yea', 'Nay', 'Abstain', 'Absent', 'Present',
                 name='lgr_vote_type_enum')
 
 AgendaItemTypeMap = dict(V='presentation', VI='policy',
-                         VII='routine')
+                         VII='routine', IV='unknown')
+AgendaItemTypeMap['I'] = 'public'
 
 
 CacheType = Enum('action', 'departments', 'item', 'meeting',

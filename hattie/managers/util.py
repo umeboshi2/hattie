@@ -25,4 +25,5 @@ def convert_agenda_number(agenda_number):
             order = int(agenda_number)
         else:
             order = None
+    print("ITEM", itemtype, order)
     return itemtype, order
