@@ -184,7 +184,7 @@ class DatabaseManager(object):
 
     def export_all(self):
         return export_all(self.session)
-    
+
     def add_meetings_for_year(self, year):
         content = self.collector.get_rss_content(year)
         rss = feedparser.parse(content)

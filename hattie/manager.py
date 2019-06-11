@@ -1,10 +1,10 @@
 from datetime import datetime
 import transaction
 import io
-import tarfile
 import lzma
 import json
-import base64
+# import base64
+# import tarfile
 
 from sqlalchemy.orm.exc import NoResultFound
 # from sqlalchemy import desc
@@ -55,7 +55,7 @@ def export_all(session):
 
 
 def convert_agenda_number(agenda_number):
-    original = agenda_number
+    # original = agenda_number
     while agenda_number.startswith('.'):
         agenda_number = agenda_number[1:]
     delimiter = '.-'
