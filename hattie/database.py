@@ -194,7 +194,8 @@ class MeetingItem(Base, SerialBase):
                      primary_key=True)
 
     agenda_num = Column(String)
-    type = Column('type', AgendaItemType)
+    # type = Column('type', AgendaItemType)
+    type = Column('type', String)
     # order is by type
     order = Column('order', Integer)
     # item order is order of all items
