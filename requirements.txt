@@ -8,6 +8,6 @@ robobrowser==0.5.3
 six==1.12.0
 soupsieve==1.9.3
 transaction==2.4.0
-urllib3==1.25.4
+urllib3==1.25.10
 Werkzeug==0.16.0
 zope.interface==4.6.0
