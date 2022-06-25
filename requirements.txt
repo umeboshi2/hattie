@@ -1,6 +1,6 @@
 beautifulsoup4==4.8.0
 certifi==2019.9.11
-chardet==3.0.4
+chardet==5.0.0
 feedparser==5.2.1
 idna==2.8
 requests==2.22.0
