@@ -10,4 +10,4 @@ soupsieve==1.9.3
 transaction==2.4.0
 urllib3==1.25.4
 Werkzeug==0.16.0
-zope.interface==4.6.0
+zope.interface==5.5.1
